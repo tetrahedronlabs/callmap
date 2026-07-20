@@ -7,11 +7,16 @@ interface AvatarGroupProps extends React.HTMLAttributes<HTMLDivElement> {
 	max: number;
 }
 
+interface AvatarChildProps {
+	className?: string;
+	style?: React.CSSProperties;
+}
+
 const AvatarGroup = React.forwardRef<HTMLDivElement, AvatarGroupProps>(
 	({ className, children, max = 1, ...props }, ref) => {
-		const avatarItems = React.Children.toArray(
-			children
-		) as React.ReactElement[];
+		const avatarItems = React.Children.toArray(children).filter(
+			React.isValidElement
+		) as React.ReactElement<AvatarChildProps>[];
 
 		const handleMargin = (index: number) => {
 			return index * 10;
@@ -45,8 +50,7 @@ const AvatarGroup = React.forwardRef<HTMLDivElement, AvatarGroupProps>(
 					)}
 				</>
 			);
-			// eslint-disable-next-line react-hooks/exhaustive-deps
-		}, [max]);
+		}, [avatarItems, max]);
 
 		return (
 			<div

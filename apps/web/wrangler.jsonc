@@ -1,0 +1,21 @@
+{
+	"$schema": "./node_modules/wrangler/config-schema.json",
+	"name": "callmap",
+	"account_id": "4b44d635fba30ffda3aedcf06a9ab5ea",
+	"main": "./workers/app.ts",
+	"compatibility_date": "2026-07-19",
+	"compatibility_flags": ["nodejs_compat"],
+	"observability": {
+		"enabled": true,
+	},
+	"upload_source_maps": true,
+	"placement": {
+		"mode": "smart",
+	},
+	"hyperdrive": [
+		{
+			"binding": "HYPERDRIVE",
+			"id": "d65980863f0e43e094f8b39d7625f87a",
+		},
+	],
+}

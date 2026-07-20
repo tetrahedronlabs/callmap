@@ -5,7 +5,7 @@ export function cn(...inputs: ClassValue[]) {
 	return twMerge(clsx(inputs));
 }
 
-export function formatDate(dateString: any) {
+export function formatDate(dateString: string) {
 	const date = new Date(dateString);
 	const monthNames = [
 		'Jan',
@@ -21,44 +21,16 @@ export function formatDate(dateString: any) {
 		'Nov',
 		'Dec',
 	];
-	const daySuffixes = [
-		'th',
-		'st',
-		'nd',
-		'rd',
-		'th',
-		'th',
-		'th',
-		'th',
-		'th',
-		'th',
-		'th',
-		'th',
-		'th',
-		'th',
-		'th',
-		'th',
-		'th',
-		'th',
-		'th',
-		'th',
-		'st',
-		'nd',
-		'rd',
-		'th',
-		'th',
-		'th',
-		'th',
-		'th',
-		'th',
-		'th',
-		'st',
-	];
-
 	const day = date.getDate();
 	const monthIndex = date.getMonth();
+	const remainder = day % 100;
+	const suffix =
+		remainder >= 11 && remainder <= 13
+			? 'th'
+			: (({ 1: 'st', 2: 'nd', 3: 'rd' } as Record<number, string>)[day % 10] ??
+				'th');
 
-	return `${monthNames[monthIndex]} ${day}${daySuffixes[day - 1]}`;
+	return `${monthNames[monthIndex]} ${day}${suffix}`;
 }
 
 export function getDayOfWeek(date: string): string {
@@ -96,12 +68,4 @@ export function getTimeSince(date: string): string {
 	} else {
 		return Math.round(elapsed / msPerDay) + ' days ago';
 	}
-}
-
-const slugToIdMap: { [key: string]: number } = {
-	ucsd: 1,
-};
-
-export function getIdFromSlug(slug: string): number {
-	return slugToIdMap[slug];
 }
