@@ -15,6 +15,13 @@
       "when": 1784531563643,
       "tag": "0001_text-department-location-ids",
       "breakpoints": true
+    },
+    {
+      "idx": 2,
+      "version": "7",
+      "when": 1784532607045,
+      "tag": "0002_drop-legacy-department-ids",
+      "breakpoints": true
     }
   ]
 }

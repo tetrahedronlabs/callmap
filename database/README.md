@@ -26,6 +26,9 @@ manual recovery procedures and are never run automatically.
 - The canonical department and location identifiers are text. Numeric
   department identifiers remain temporarily in `legacy_department_id` columns
   so the reviewed rollback can restore the previous schema without data loss.
+- `0002_drop-legacy-department-ids.sql` removes those rollback-only columns. It
+  contains irreversible production `DROP COLUMN` statements and must be run
+  directly by an operator after reviewing its reconstruction rollback.
 
 For future changes, edit the TypeScript schema, generate and review the SQL,
 then apply only the new migration through an approved PlanetScale development

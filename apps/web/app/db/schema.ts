@@ -6,32 +6,23 @@ import {
 	index,
 	integer,
 	pgTable,
-	smallint,
 	text,
 	time,
 	timestamp,
-	unique,
 	uuid,
 } from 'drizzle-orm/pg-core';
 
-export const departments = pgTable(
-	'departments',
-	{
-		departmentId: text('department_id').primaryKey(),
-		legacyDepartmentId: smallint('legacy_department_id').notNull(),
-		name: text('name').notNull(),
-		recordCount: bigint('record_count', { mode: 'number' }).notNull(),
-		lastUpdated: timestamp('last_updated', {
-			withTimezone: true,
-			mode: 'string',
-		}).notNull(),
-		daysParsed: bigint('days_parsed', { mode: 'number' }).notNull(),
-		logo: text('logo').notNull(),
-	},
-	(table) => [
-		unique('departments_legacy_department_id_key').on(table.legacyDepartmentId),
-	]
-);
+export const departments = pgTable('departments', {
+	departmentId: text('department_id').primaryKey(),
+	name: text('name').notNull(),
+	recordCount: bigint('record_count', { mode: 'number' }).notNull(),
+	lastUpdated: timestamp('last_updated', {
+		withTimezone: true,
+		mode: 'string',
+	}).notNull(),
+	daysParsed: bigint('days_parsed', { mode: 'number' }).notNull(),
+	logo: text('logo').notNull(),
+});
 
 export const files = pgTable(
 	'files',
@@ -39,7 +30,6 @@ export const files = pgTable(
 		fileId: uuid('file_id').primaryKey(),
 		fileName: text('file_name'),
 		departmentId: text('department_id'),
-		legacyDepartmentId: smallint('legacy_department_id'),
 	},
 	(table) => [
 		foreignKey({
@@ -60,7 +50,6 @@ export const locations = pgTable(
 		location: text('location').notNull(),
 		count: integer('count'),
 		departmentId: text('department_id').notNull(),
-		legacyDepartmentId: smallint('legacy_department_id').notNull(),
 	},
 	(table) => [
 		foreignKey({
@@ -89,7 +78,6 @@ export const records = pgTable(
 		parsedDateOccurred: date('parsed_date_occurred', { mode: 'string' }),
 		parsedTimeOccurred: time('parsed_time_occurred'),
 		departmentId: text('department_id').notNull(),
-		legacyDepartmentId: smallint('legacy_department_id').notNull(),
 		fileId: uuid('file_id'),
 	},
 	(table) => [
