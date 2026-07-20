@@ -32,5 +32,23 @@ npm run db:generate -- --name=<change-name>
 npm run db:check
 ```
 
+## UCSF crime-log ingestion
+
+The UCSF importer discovers every monthly page linked from the public archive,
+adds the current rolling daily log, validates the six-column source tables, and
+deduplicates overlapping rows with stable IDs. Each `files` row retains its
+exact UCSF source URL for provenance.
+
+```bash
+# Scrape and validate without touching the database
+npm run ingest:ucsf -- --output .ucsf-ingest/ucsf.json
+
+# Load the idempotent upserts after obtaining a short-lived database URL
+DATABASE_URL='postgresql://...' npm run ingest:ucsf -- --load
+
+# Parser regression tests
+npm run test:ucsf-ingest
+```
+
 The production Worker configuration is in `wrangler.jsonc`. Database schema
 migrations and the PlanetScale workflow are documented in `../../database`.

@@ -26,6 +26,7 @@ yarn-error.log*
 .wrangler/
 .mf/
 worker-configuration.d.ts
+.ucsf-ingest/
 
 !.dev.vars.example
 !.env.example
