@@ -12,7 +12,7 @@ import {
 import type { Route } from './+types/department';
 
 export async function loader({ params }: Route.LoaderArgs) {
-	const department = await getDepartment(params.departmentslug);
+	const department = await getDepartment(params.departmentid);
 	if (!department) {
 		throw new Response('Campus not found', { status: 404 });
 	}

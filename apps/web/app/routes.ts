@@ -7,8 +7,8 @@ import {
 
 export default [
 	layout('routes/landing-layout.tsx', [index('routes/home.tsx')]),
-	route(':departmentslug', 'routes/department.tsx'),
-	route(':departmentslug/records/:recordid', 'routes/record.tsx'),
+	route(':departmentid', 'routes/department.tsx'),
+	route(':departmentid/records/:recordid', 'routes/record.tsx'),
 	route('sitemap.xml', 'routes/sitemap.ts'),
 	route('robots.txt', 'routes/robots.ts'),
 ] satisfies RouteConfig;

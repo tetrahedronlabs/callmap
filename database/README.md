@@ -16,6 +16,17 @@ npm run db:check
 PlanetScale `callmap/main` production branch. Do not apply that baseline to the
 existing branch.
 
+Rollback SQL for reviewed migrations lives in `./rollbacks`. Rollbacks are
+manual recovery procedures and are never run automatically.
+
+## Production migration status
+
+- `0001_text-department-location-ids.sql` was applied to
+  `tetrahedron-labs/callmap/main` on 2026-07-20 as change `CM-ID-001`.
+- The canonical department and location identifiers are text. Numeric
+  department identifiers remain temporarily in `legacy_department_id` columns
+  so the reviewed rollback can restore the previous schema without data loss.
+
 For future changes, edit the TypeScript schema, generate and review the SQL,
 then apply only the new migration through an approved PlanetScale development
 branch workflow. This project intentionally does not expose `db:push` or

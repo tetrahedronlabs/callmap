@@ -1,11 +1,10 @@
 export interface Department {
-	department_id: number;
+	department_id: string;
 	name: string;
 	record_count: number;
 	last_updated: string;
 	days_parsed: number;
 	logo: string;
-	slug: string | null;
 }
 
 export interface DepartmentSummary extends Department {
@@ -24,14 +23,14 @@ export interface RecordDetail {
 	time_occurred: string | null;
 	summary: string | null;
 	disposition: string | null;
-	parsed_location: string | null;
-	department_id: number;
+	location_id: string | null;
+	department_id: string;
 	department_name: string;
 	latitude: number | null;
 	longitude: number | null;
 }
 
 export interface SitemapRecord {
-	department_slug: string;
+	department_id: string;
 	record_id: string;
 }

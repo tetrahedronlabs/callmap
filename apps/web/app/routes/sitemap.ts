@@ -9,12 +9,10 @@ export async function loader({ request }: Route.LoaderArgs) {
 	]);
 	const urls = [
 		origin,
-		...departments
-			.filter((department) => department.slug)
-			.map((department) => `${origin}/${department.slug}`),
+		...departments.map((department) => `${origin}/${department.department_id}`),
 		...records.map(
 			(record) =>
-				`${origin}/${record.department_slug}/records/${record.record_id}`
+				`${origin}/${record.department_id}/records/${record.record_id}`
 		),
 	];
 	const body = `<?xml version="1.0" encoding="UTF-8"?>\n<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">\n${urls

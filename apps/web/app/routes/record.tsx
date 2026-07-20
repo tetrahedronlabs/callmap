@@ -5,7 +5,7 @@ import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import type { Route } from './+types/record';
 
 export async function loader({ params }: Route.LoaderArgs) {
-	const record = await getRecord(params.departmentslug, params.recordid);
+	const record = await getRecord(params.departmentid, params.recordid);
 	if (!record) {
 		throw new Response('Record not found', { status: 404 });
 	}

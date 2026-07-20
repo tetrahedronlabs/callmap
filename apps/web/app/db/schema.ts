@@ -17,7 +17,8 @@ import {
 export const departments = pgTable(
 	'departments',
 	{
-		departmentId: smallint('department_id').primaryKey(),
+		departmentId: text('department_id').primaryKey(),
+		legacyDepartmentId: smallint('legacy_department_id').notNull(),
 		name: text('name').notNull(),
 		recordCount: bigint('record_count', { mode: 'number' }).notNull(),
 		lastUpdated: timestamp('last_updated', {
@@ -26,9 +27,10 @@ export const departments = pgTable(
 		}).notNull(),
 		daysParsed: bigint('days_parsed', { mode: 'number' }).notNull(),
 		logo: text('logo').notNull(),
-		slug: text('slug'),
 	},
-	(table) => [unique('departments_slug_key').on(table.slug)]
+	(table) => [
+		unique('departments_legacy_department_id_key').on(table.legacyDepartmentId),
+	]
 );
 
 export const files = pgTable(
@@ -36,7 +38,8 @@ export const files = pgTable(
 	{
 		fileId: uuid('file_id').primaryKey(),
 		fileName: text('file_name'),
-		departmentId: smallint('department_id'),
+		departmentId: text('department_id'),
+		legacyDepartmentId: smallint('legacy_department_id'),
 	},
 	(table) => [
 		foreignKey({
@@ -51,12 +54,13 @@ export const files = pgTable(
 export const locations = pgTable(
 	'locations',
 	{
-		parsedLocation: text('parsed_location').primaryKey(),
+		locationId: text('location_id').primaryKey(),
 		latitude: doublePrecision('latitude'),
 		longitude: doublePrecision('longitude'),
 		location: text('location').notNull(),
 		count: integer('count'),
-		departmentId: smallint('department_id').notNull(),
+		departmentId: text('department_id').notNull(),
+		legacyDepartmentId: smallint('legacy_department_id').notNull(),
 	},
 	(table) => [
 		foreignKey({
@@ -80,11 +84,12 @@ export const records = pgTable(
 		timeOccurred: text('time_occurred'),
 		summary: text('summary'),
 		disposition: text('disposition'),
-		parsedLocation: text('parsed_location'),
+		locationId: text('location_id'),
 		parsedDateReported: date('parsed_date_reported', { mode: 'string' }),
 		parsedDateOccurred: date('parsed_date_occurred', { mode: 'string' }),
 		parsedTimeOccurred: time('parsed_time_occurred'),
-		departmentId: smallint('department_id').notNull(),
+		departmentId: text('department_id').notNull(),
+		legacyDepartmentId: smallint('legacy_department_id').notNull(),
 		fileId: uuid('file_id'),
 	},
 	(table) => [
@@ -100,6 +105,12 @@ export const records = pgTable(
 		})
 			.onUpdate('cascade')
 			.onDelete('set null'),
+		foreignKey({
+			name: 'records_location_id_fkey',
+			columns: [table.locationId],
+			foreignColumns: [locations.locationId],
+		}),
 		index('records_department_id_idx').on(table.departmentId),
+		index('records_location_id_idx').on(table.locationId),
 	]
 );

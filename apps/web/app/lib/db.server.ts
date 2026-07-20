@@ -36,8 +36,7 @@ export async function getDepartments(): Promise<Department[]> {
 			count(r.record_id)::integer AS record_count,
 			d.last_updated::text AS last_updated,
 			d.days_parsed::integer AS days_parsed,
-			d.logo,
-			d.slug
+			d.logo
 		FROM public.departments d
 		LEFT JOIN public.records r ON r.department_id = d.department_id
 		GROUP BY d.department_id
@@ -46,7 +45,7 @@ export async function getDepartments(): Promise<Department[]> {
 }
 
 export async function getDepartment(
-	slug: string
+	departmentId: string
 ): Promise<DepartmentSummary | null> {
 	const rows = await queryRows<DepartmentSummary>(
 		`
@@ -65,7 +64,6 @@ export async function getDepartment(
 					0
 				)::integer AS days_parsed,
 				d.logo,
-				d.slug,
 				(
 					SELECT count(*)::integer
 					FROM public.records r
@@ -88,16 +86,16 @@ export async function getDepartment(
 					LIMIT 1
 				) AS most_common_location
 			FROM public.departments d
-			WHERE d.slug = $1
+			WHERE d.department_id = $1
 			LIMIT 1
 		`,
-		[slug]
+		[departmentId]
 	);
 	return rows[0] ?? null;
 }
 
 export async function getRecord(
-	departmentSlug: string,
+	departmentId: string,
 	recordId: string
 ): Promise<RecordDetail | null> {
 	const rows = await queryRows<RecordDetail>(
@@ -112,7 +110,7 @@ export async function getRecord(
 				r.time_occurred,
 				r.summary,
 				r.disposition,
-				r.parsed_location,
+				r.location_id,
 				r.department_id,
 				d.name AS department_name,
 				l.latitude,
@@ -121,21 +119,20 @@ export async function getRecord(
 			JOIN public.departments d ON d.department_id = r.department_id
 			LEFT JOIN public.locations l
 				ON l.department_id = r.department_id
-				AND l.parsed_location = r.parsed_location
-			WHERE d.slug = $1 AND r.record_id::text = $2
+				AND l.location_id = r.location_id
+			WHERE d.department_id = $1 AND r.record_id::text = $2
 			LIMIT 1
 		`,
-		[departmentSlug, recordId]
+		[departmentId, recordId]
 	);
 	return rows[0] ?? null;
 }
 
 export async function getSitemapRecords(): Promise<SitemapRecord[]> {
 	return queryRows<SitemapRecord>(`
-		SELECT d.slug AS department_slug, r.record_id::text AS record_id
+		SELECT d.department_id, r.record_id::text AS record_id
 		FROM public.records r
 		JOIN public.departments d ON d.department_id = r.department_id
-		WHERE d.slug IS NOT NULL
-		ORDER BY d.slug, r.record_id
+		ORDER BY d.department_id, r.record_id
 	`);
 }

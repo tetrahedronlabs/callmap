@@ -29,25 +29,26 @@ export default function Home({ loaderData }: Route.ComponentProps) {
 				</p>
 			</div>
 			<div className="mt-10 grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
-				{loaderData.departments
-					.filter((department) => department.slug !== null)
-					.map((department) => (
-						<Link key={department.department_id} to={`/${department.slug}`}>
-							<Card className="h-full transition-colors hover:bg-muted/40">
-								<CardHeader className="flex flex-row items-center gap-4">
-									<DepartmentLogo
-										src={department.logo}
-										name={department.name}
-										className="h-14 w-14 object-contain"
-									/>
-									<CardTitle>{department.name}</CardTitle>
-								</CardHeader>
-								<CardContent className="text-sm text-muted-foreground">
-									{department.record_count.toLocaleString()} records
-								</CardContent>
-							</Card>
-						</Link>
-					))}
+				{loaderData.departments.map((department) => (
+					<Link
+						key={department.department_id}
+						to={`/${department.department_id}`}
+					>
+						<Card className="h-full transition-colors hover:bg-muted/40">
+							<CardHeader className="flex flex-row items-center gap-4">
+								<DepartmentLogo
+									src={department.logo}
+									name={department.name}
+									className="h-14 w-14 object-contain"
+								/>
+								<CardTitle>{department.name}</CardTitle>
+							</CardHeader>
+							<CardContent className="text-sm text-muted-foreground">
+								{department.record_count.toLocaleString()} records
+							</CardContent>
+						</Card>
+					</Link>
+				))}
 			</div>
 		</main>
 	);
